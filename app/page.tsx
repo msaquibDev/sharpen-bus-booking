@@ -300,12 +300,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="section-heading date-heading">
+        {/* <div className="section-heading date-heading">
           <div>
             <p className="eyebrow dark">Select a date</p>
             <h2>When will you join us?</h2>
           </div>
-        </div>
+        </div> */}
         <div className="date-grid">
           {EVENT.dates.map((date) => {
             const parts = getDateParts(date);

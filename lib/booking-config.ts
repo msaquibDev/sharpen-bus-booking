@@ -4,7 +4,7 @@ export const EVENT = {
   location: "Hyderabad, India",
   pickup: "Subham Convention Centre",
   drop: "The Gideons International In India",
-  dates: ["2026-09-10", "2026-09-11", "2026-09-12"],
+  dates: ["2026-09-12"],
 } as const;
 
 export const SLOT_TIMES = [
