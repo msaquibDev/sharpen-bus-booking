@@ -6,6 +6,7 @@ import {
   ArrowDown,
   ArrowRight,
   BusFront,
+  CalendarDays,
   Check,
   ChevronRight,
   Clock3,
@@ -306,7 +307,7 @@ export default function Home() {
             <h2>When will you join us?</h2>
           </div>
         </div> */}
-        <div className="date-grid">
+        {/* <div className="date-grid">
           {EVENT.dates.map((date) => {
             const parts = getDateParts(date);
             return (
@@ -326,6 +327,17 @@ export default function Home() {
               </button>
             );
           })}
+        </div> */}
+
+        <div className="booking-date-notice">
+          <div className="booking-date-icon">
+            <CalendarDays size={22} />
+          </div>
+
+          <div>
+            <span>Bus booking date</span>
+            <strong>Saturday, 12 September 2026</strong>
+          </div>
         </div>
 
         <div className="section-heading slots-heading">
