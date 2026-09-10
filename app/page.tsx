@@ -242,32 +242,60 @@ export default function Home() {
               priority
             />
           </div>
-          <div className="secure-label">
-            <ShieldCheck size={16} /> Secure seat booking
+
+          <div className="hero-actions">
+            <div className="secure-label">
+              <ShieldCheck size={16} />
+              Secure seat booking
+            </div>
+
+            <a href="/admin/login" className="admin-button">
+              <ShieldCheck size={16} />
+              Admin
+            </a>
           </div>
         </div>
+
         <div className="hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">2026 National Convention</p>
+
             <h1>
               Arrive ready.
               <br />
               <em>Travel together.</em>
             </h1>
+
             <p className="hero-intro">
               Reserve your complimentary bus seat for Sharpen The Edge in
               Hyderabad.
             </p>
+
             <div className="event-meta">
               <span>
-                <Clock3 size={16} /> 10–12 September 2026
+                <Clock3 size={16} />
+                10–12 September 2026
               </span>
+
               <span>
-                <MapPin size={16} /> Hyderabad, India
+                <MapPin size={16} />
+                Hyderabad, India
               </span>
             </div>
           </div>
-          {/* <div className="hero-image-wrap"><Image src="/images/sharpen-banner.png" alt="Sharpen The Edge 2026 National Convention" fill priority sizes="(max-width: 768px) 100vw, 48vw" className="hero-image" /></div> */}
+
+          {/* 
+    <div className="hero-image-wrap">
+      <Image
+        src="/images/sharpen-banner.png"
+        alt="Sharpen The Edge 2026 National Convention"
+        fill
+        priority
+        sizes="(max-width: 768px) 100vw, 48vw"
+        className="hero-image"
+      />
+    </div>
+    */}
         </div>
       </section>
 

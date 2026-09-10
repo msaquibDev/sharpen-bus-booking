@@ -805,6 +805,47 @@ footer img {
   color: #17342d;
 }
 
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1px solid #d7e0dc;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #17342d;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.admin-button:hover {
+  background: #f3f7f5;
+  border-color: #b9c9c3;
+}
+
+@media (max-width: 640px) {
+  .hero-actions {
+    gap: 8px;
+  }
+
+  .secure-label {
+    display: none;
+  }
+
+  .admin-button {
+    padding: 7px 11px;
+    font-size: 12px;
+  }
+}
+
 @media (max-width: 640px) {
   .booking-date-notice {
     padding: 14px;
