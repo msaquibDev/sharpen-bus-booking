@@ -86,7 +86,17 @@ export default function Home() {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [confirmation, setConfirmation] = useState("");
+  type ConfirmationData = {
+    bookingId: string;
+    date: string;
+    slot: Slot;
+    email: string;
+    emailSent: boolean;
+  };
+
+  const [confirmation, setConfirmation] = useState<ConfirmationData | null>(
+    null,
+  );
 
   async function loadSlots(date: string) {
     setLoadingSlots(true);
@@ -135,35 +145,60 @@ export default function Home() {
 
   async function submitBooking() {
     if (!selectedSlot) return;
+
     const nextErrors = validate();
+
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors);
       return;
     }
+
     setSubmitting(true);
     setFormError("");
+
     try {
       const response = await fetch("/api/bookings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           ...form,
           date: selectedDate,
           slotTime: selectedSlot.time,
         }),
       });
+
       const data = (await response.json()) as {
         success?: boolean;
         bookingId?: string;
+        emailSent?: boolean;
         message?: string;
       };
-      if (!response.ok || !data.success || !data.bookingId)
+
+      if (!response.ok || !data.success || !data.bookingId) {
         throw new Error(data.message || "Unable to confirm booking");
-      setConfirmation(data.bookingId);
+      }
+
+      // Save confirmation details BEFORE clearing the form/slot.
+      setConfirmation({
+        bookingId: data.bookingId,
+        date: selectedDate,
+        slot: selectedSlot,
+        email: form.email,
+        emailSent: data.emailSent ?? false,
+      });
+
+      // Clear booking form only after confirmation data is saved.
       setSelectedSlot(null);
       setForm(initialForm);
+      setErrors({});
+
+      // Refresh slot availability.
       void loadSlots(selectedDate);
     } catch (error) {
+      console.error("Booking submission error:", error);
+
       setFormError(
         error instanceof Error
           ? error.message
@@ -177,13 +212,17 @@ export default function Home() {
   if (confirmation) {
     return (
       <Confirmation
-        bookingId={confirmation}
-        date={selectedDateLabel}
-        slot={selectedSlot}
-        email={form.email}
+        bookingId={confirmation.bookingId}
+        date={formatEventDate(confirmation.date)}
+        slot={confirmation.slot}
+        email={confirmation.email}
+        emailSent={confirmation.emailSent}
         onReset={() => {
-          setConfirmation("");
+          setConfirmation(null);
           setSelectedSlot(null);
+          setForm(initialForm);
+          setErrors({});
+          setFormError("");
         }}
       />
     );
@@ -497,12 +536,14 @@ function Confirmation({
   date,
   slot,
   email,
+  emailSent,
   onReset,
 }: {
   bookingId: string;
   date: string;
-  slot: Slot | null;
+  slot: Slot;
   email: string;
+  emailSent: boolean;
   onReset: () => void;
 }) {
   return (
@@ -511,44 +552,68 @@ function Confirmation({
         <div className="success-icon">
           <Check size={28} />
         </div>
+
         <p className="eyebrow dark">Seat reserved</p>
+
         <h1>Booking confirmed.</h1>
+
         <p className="confirmation-lead">
           Your bus seat has been successfully reserved. We look forward to
           welcoming you.
         </p>
+
         <div className="booking-id">
           <small>BOOKING ID</small>
           <strong>{bookingId}</strong>
         </div>
+
         <div className="confirmation-details">
           <div>
             <small>Date</small>
             <strong>{date}</strong>
           </div>
+
           <div>
             <small>Bus time</small>
-            <strong>{slot?.displayTime || "Selected slot"}</strong>
+            <strong>{slot.displayTime}</strong>
           </div>
+
           <div>
             <small>Pickup</small>
             <strong>{EVENT.pickup}</strong>
           </div>
+
           <div>
             <small>Drop</small>
             <strong>{EVENT.drop}</strong>
           </div>
         </div>
+
         <div className="email-sent">
           <Mail size={18} />
+
           <span>
-            A confirmation email has been sent to
-            <br />
-            <strong>{email || "your email address"}</strong>
+            {emailSent ? (
+              <>
+                A confirmation email has been sent to
+                <br />
+                <strong>{email}</strong>
+              </>
+            ) : (
+              <>
+                Your booking is confirmed.
+                <br />
+                We could not send the confirmation email right now.
+                <br />
+                <strong>{email}</strong>
+              </>
+            )}
           </span>
         </div>
+
         <button className="confirm-button" onClick={onReset}>
-          Book another slot <ChevronRight size={18} />
+          Book another slot
+          <ChevronRight size={18} />
         </button>
       </div>
     </main>
